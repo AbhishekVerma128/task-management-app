@@ -9,68 +9,71 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import EditTask from './components/EditTask';
 import { ToastContainer, toast } from 'react-toastify';
 import TaskDetail from './components/TaskDetail';
+import Loader from './components/Loader';
 const App = () => {
   const [tasks, setTasks] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetchTasks();
   }, []);
 
   const fetchTasks = async () => {
-    const response = await axios.get('http://localhost:5000/tasks');
+    const response = await axios.get('https://task-management-app-udv5.onrender.com/tasks');
     setTasks(response.data);
+    setLoading(false)
   };
 
   const addTask = async (task) => {
-    const response = await axios.post('http://localhost:5000/tasks', task);
-    if(response.data.message){
-     toast(response.data.message,{type:"success"})
+    const response = await axios.post('https://task-management-app-udv5.onrender.com/tasks', task);
+    if (response.data.message) {
+      toast(response.data.message, { type: "success" })
       setTasks([...tasks, response.data.newTask]);
-    }else{
-      toast(response.data.error,{type:"error"})
+    } else {
+      toast(response.data.error, { type: "error" })
     }
   };
 
-  const updateTask = async (id, updatedTask,navigate) => {
-    const response = await axios.put(`http://localhost:5000/tasks/${id}`, updatedTask);
-    if(response.data.message){
-      toast(response.data.message,{type:"success"})
+  const updateTask = async (id, updatedTask, navigate) => {
+    const response = await axios.put(`https://task-management-app-udv5.onrender.com/tasks/${id}`, updatedTask);
+    if (response.data.message) {
+      toast(response.data.message, { type: "success" })
       setTasks(tasks.map(task => (task._id === id ? response.data.updatedTask : task)));
       navigate("/")
-     }else{
-       toast(response.data.error,{type:"error"})
-     }
-   
+    } else {
+      toast(response.data.error, { type: "error" })
+    }
+
   };
   const getTaskDetail = async (id) => {
-    const response = await axios.get(`http://localhost:5000/tasks/${id}`);
-    if(response.data.message){
+    const response = await axios.get(`https://task-management-app-udv5.onrender.com/tasks/${id}`);
+    if (response.data.message) {
       return response.data.task
-     }else{
-       toast(response.data.error,{type:"error"})
-     }
-   
+    } else {
+      toast(response.data.error, { type: "error" })
+    }
+
   };
 
   const deleteTask = async (id) => {
-    const response = await axios.delete(`http://localhost:5000/tasks/${id}`);
-    if(response.data.message){
-      toast(response.data.message,{type:"success"})
+    const response = await axios.delete(`https://task-management-app-udv5.onrender.com/tasks/${id}`);
+    if (response.data.message) {
+      toast(response.data.message, { type: "success" })
       setTasks(tasks.filter(task => task._id !== id));
-     }else{
-       toast(response.data.error,{type:"error"})
-     }
-   
+    } else {
+      toast(response.data.error, { type: "error" })
+    }
+
   };
 
   return (
     <Router>
       <div >
         <>
-        <div className="collapse navbar-collapse" id="navbarNav"></div>
-        <Navbar />
+          <div className="collapse navbar-collapse" id="navbarNav"></div>
+          <Navbar />
         </>
         <ToastContainer />
+        {loading && <Loader/>}
         <div className="container mt-4">
           <Routes>
             <Route
@@ -78,7 +81,7 @@ const App = () => {
               element={
                 <>
                   <h1 className="text-center mb-4">Task List</h1>
-                  <TaskList tasks={tasks} deleteTask={deleteTask} updateTask={updateTask}/>
+                  <TaskList tasks={tasks} deleteTask={deleteTask} updateTask={updateTask} />
                 </>
               }
             />
@@ -87,7 +90,7 @@ const App = () => {
               element={
                 <>
                   <h1 className="text-center mb-4">Task Detail</h1>
-                  <TaskDetail getTaskDetail={getTaskDetail}/>
+                  <TaskDetail getTaskDetail={getTaskDetail} />
                 </>
               }
             />

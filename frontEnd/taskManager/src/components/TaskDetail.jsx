@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Loader from './Loader';
 
 const TaskDetail = ({ getTaskDetail }) => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [task, setTask] = useState(null);
+    const [task, setTask] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const getTaskDetails = async()=>{
+    const getTaskDetails = async () => {
         const data = await getTaskDetail(id)
-        if(data){
+        if (data) {
             setTask(data);
-            
+
         }
     }
 
@@ -24,35 +25,29 @@ const TaskDetail = ({ getTaskDetail }) => {
 
     }), []
 
+    // useEffect(() => {
+    //     const fetchTask = async () => {
+    //         try {
+    //             const response = await axios.get(`https://task-management-app-udv5.onrender.com/tasks/${id}`);
+    //             setTask(response.data);
+    //             setLoading(false);
+    //         } catch (error) {
+    //             console.error('Error fetching task:', error);
+    //             setError('Failed to fetch task details');
+    //             setLoading(false);
+    //         }
+    //     };
 
-    // Fetch task details when the component mounts
-    useEffect(() => {
-        const fetchTask = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5000/tasks/${id}`);
-                setTask(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching task:', error);
-                setError('Failed to fetch task details');
-                setLoading(false);
-            }
-        };
+    //     fetchTask();
+    // }, [id]);
 
-        fetchTask();
-    }, [id]);
-
-    // Handle loading state
     if (loading) {
-        return <div className="text-center mt-4">Loading...</div>;
+        return <Loader/>;
     }
-
-    // Handle error state
     if (error) {
         return <div className="text-center mt-4 text-danger">{error}</div>;
     }
 
-    // Handle case where task is not found
     if (!task) {
         return <div className="text-center mt-4">Task not found</div>;
     }

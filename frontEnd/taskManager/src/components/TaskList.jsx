@@ -56,7 +56,7 @@ const TaskList = ({ tasks, updateTask, deleteTask }) => {
                 <div key={task._id} className="card mb-3">
                     <div className="card-body">
                         <div className="d-flex justify-content-between">
-                            <h5 className="card-title" onClick={() => navigation(`/task/detail/${task._id}`)}>{task.title}</h5>
+                            <h5 className="card-title" style={{cursor:"pointer"}} onClick={() => navigation(`/task/detail/${task._id}`)}>{task.title}</h5>
                             <button onClick={() => navigation("/task/edit", { state: { task } })}>Edit</button>
                         </div>
                         <p className="card-text">{task.description}</p>
@@ -77,7 +77,7 @@ const TaskList = ({ tasks, updateTask, deleteTask }) => {
                             className="btn btn-success me-2"
                             onClick={() => updateTask(task._id, { ...task, status: 'Completed' })}
                         >
-                            Complete
+                           Mark Complete
                         </button>
                         <button
                             className="btn btn-danger"
