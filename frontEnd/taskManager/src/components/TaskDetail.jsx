@@ -6,15 +6,19 @@ import Loader from './Loader';
 const TaskDetail = ({ getTaskDetail }) => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [task, setTask] = useState('');
+    const [task, setTask] = useState();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     const getTaskDetails = async () => {
         const data = await getTaskDetail(id)
+
         if (data) {
             setTask(data);
-
+            setLoading(false);
+        } else {
+            setError('Failed to fetch task details');
+            setLoading(false);
         }
     }
 
@@ -23,26 +27,11 @@ const TaskDetail = ({ getTaskDetail }) => {
             getTaskDetails()
         }
 
-    }), []
+    }, [id])
 
-    // useEffect(() => {
-    //     const fetchTask = async () => {
-    //         try {
-    //             const response = await axios.get(`https://task-management-app-udv5.onrender.com/tasks/${id}`);
-    //             setTask(response.data);
-    //             setLoading(false);
-    //         } catch (error) {
-    //             console.error('Error fetching task:', error);
-    //             setError('Failed to fetch task details');
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     fetchTask();
-    // }, [id]);
-
+   
     if (loading) {
-        return <Loader/>;
+        return <Loader />;
     }
     if (error) {
         return <div className="text-center mt-4 text-danger">{error}</div>;
